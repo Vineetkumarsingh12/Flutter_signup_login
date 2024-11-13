@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ssignup_login/screens/signup.dart';
+import 'package:ssignup_login/screens/home.dart';
 
-import 'home.dart';
+import '../constants/colors.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
@@ -20,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
   // Function to save email and password
   Future<void> _saveCredentials(String email, String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,13 +30,12 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString('password', password);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: primaryColor, // Set the app bar color to primary color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,18 +52,20 @@ class _LoginPageState extends State<LoginPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
+
+                // Email field with standard styles
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email),
+                    labelStyle: TextStyle(color: accentColor),
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.email, color: primaryColor),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    // Basic email validation
                     if (!RegExp(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$')
                         .hasMatch(value)) {
                       return 'Please enter a valid email';
@@ -71,13 +74,16 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                // Password field with standard styles
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
+                    labelStyle: TextStyle(color: accentColor),
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock, color: primaryColor),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -101,8 +107,10 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   },
                   child: const Text("Create Account"),
+                  style: TextButton.styleFrom(foregroundColor: primaryColor), // Primary color for the link
                 ),
 
+                // Login Button with standard style
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -112,19 +120,18 @@ class _LoginPageState extends State<LoginPage> {
                         _passwordController.text,
                       );
 
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const Home(title: 'Home Page')),
                       );
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Logging in...')),
+                        const SnackBar(content: Text('Logging in...', style: TextStyle(color: buttonTextColor))),
                       );
-                      // Use the email and password values from controllers if needed
                     }
                   },
                   style: ElevatedButton.styleFrom(
+                    foregroundColor: buttonTextColor, backgroundColor: primaryColor, // Set the text color to buttonTextColor
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                   ),
                   child: const Text('Login', style: TextStyle(fontSize: 18)),

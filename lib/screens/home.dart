@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../constants/colors.dart';
 import 'login.dart';
-
-
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -15,12 +13,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String? _email;  // To store email data if available
+  String? _email; // To store email data if available
 
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _checkLoginStatus(); // Check login status when the widget is initialized
   }
 
   // Method to check if login data is available
@@ -28,18 +26,11 @@ class _HomeState extends State<Home> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email');
 
-    if (email == null) {
-      // If no email found, redirect to LoginPage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage(title: 'Login')),
-      );
-    } else {
-      // If email is found, display it
+
       setState(() {
         _email = email;
       });
-    }
+    // }
   }
 
   // Method to log out
@@ -58,24 +49,34 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: primaryColor, // Use primary color for the app bar
       ),
-      body: Center(
-        child: _email != null
-            ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome, $_email!',
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _logout,
-              child: const Text('Logout'),
-            ),
-          ],
-        )
-            : const CircularProgressIndicator(),  // Loading indicator while checking login status
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: _email != null
+              ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Welcome, $_email!',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _logout,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: buttonTextColor, // Set text color to buttonTextColor
+                  backgroundColor: primaryColor,
+                  padding: const EdgeInsets.all(16.0),
+                ),
+                child: const Text('Logout', style: TextStyle(fontSize: 18)),
+              ),
+            ],
+          )
+              : const CircularProgressIndicator(), // Loading indicator while checking login status
+        ),
       ),
     );
   }
